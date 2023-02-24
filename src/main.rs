@@ -8,6 +8,9 @@ mod apps;
 use async_graphql_actix_web::{GraphQLRequest, GraphQLResponse};
 use crate::apps::base::QueryRoot;
 
+// #[derive(MergedObject, Default)]
+// struct Query(UserQuery, MovieQuery);
+
 type ShopSchema = Schema<QueryRoot, EmptyMutation, EmptySubscription>;
 
 async fn index(schema: web::Data<ShopSchema>, req: GraphQLRequest) -> GraphQLResponse {
@@ -24,9 +27,11 @@ async fn index_playground() -> Result<HttpResponse> {
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     let addr = RedisActor::start("localhost:6379");
-    let schema = Schema::build(QueryRoot, EmptyMutation, EmptySubscription)
+    let schema = Schema::build(QueryRoot::default(), EmptyMutation, EmptySubscription)
         .data(addr.clone())
         .finish();
+
+    // .data(addr.clone())
 
     println!("Playground: http://localhost:8000");
 

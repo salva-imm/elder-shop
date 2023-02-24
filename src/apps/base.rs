@@ -1,11 +1,10 @@
 use async_graphql::{
     connection::{query, Connection, Edge},
-    Context, Enum, Error, Interface, Object, OutputType, Result, SimpleObject
+    Context, Enum, Error, Interface, MergedObject, Object, OutputType, Result, SimpleObject,
 };
 
-
-pub struct QueryRoot;
-
+use crate::apps::shop::models::Shop;
+use crate::apps::user::models::User;
 
 pub async fn query_characters<'a, T>(
     after: Option<String>,
@@ -52,7 +51,8 @@ where
 
             let mut connection = Connection::new(start > 0, end < characters.len());
             connection.edges.extend(
-                slice.to_vec()
+                slice
+                    .to_vec()
                     .iter()
                     .enumerate()
                     .map(move |(idx, item)| Edge::new(start + idx, item.clone())),
@@ -62,3 +62,6 @@ where
     )
     .await
 }
+
+#[derive(MergedObject, Default)]
+pub struct QueryRoot(User, Shop);
