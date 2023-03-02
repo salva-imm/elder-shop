@@ -9,8 +9,3 @@ pub struct User {
     pub password: String,
     pub is_active: bool,
 }
-
-#[derive(SimpleObject, Deserialize, Serialize, Default, Debug, Clone)]
-pub struct Login {
-    pub token: String,
-}
