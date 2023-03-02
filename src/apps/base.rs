@@ -3,8 +3,8 @@ use async_graphql::{
     Context, Enum, Error, Interface, MergedObject, Object, OutputType, Result, SimpleObject,
 };
 
-use crate::apps::shop::models::Shop;
-use crate::apps::user::models::User;
+use crate::apps::shop::resolvers::ShopResolvers;
+use crate::apps::user::resolvers::UserResolvers;
 
 pub async fn query_characters<'a, T>(
     after: Option<String>,
@@ -63,5 +63,5 @@ where
     .await
 }
 
-#[derive(MergedObject, Default)]
-pub struct QueryRoot(User, Shop);
+// #[derive(MergedObject, Default)]
+// pub struct QueryRoot(UserResolvers);
