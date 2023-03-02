@@ -1,5 +1,5 @@
 use crate::apps::base::query_characters;
-use crate::apps::user::models::User;
+use crate::apps::user::models::{Login, User};
 use async_graphql::parser::types::Field;
 use async_graphql::registry::Registry;
 use async_graphql::{
@@ -9,9 +9,14 @@ use async_graphql::{
 };
 use std::borrow::Cow;
 
-// #[Object]
-// impl User {
-//     async fn login(&self, username: String, password: String) -> String {
-//         String::from("String")
-//     }
-// }
+#[derive(Default)]
+pub struct UserMutations;
+
+#[Object]
+impl UserMutations {
+    async fn login(&self, username: String, password: String) -> Login {
+        Login {
+            token: String::from("String"),
+        }
+    }
+}

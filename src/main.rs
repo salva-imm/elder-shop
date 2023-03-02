@@ -1,4 +1,4 @@
-#![cfg_attr(debug_assertions, allow(dead_code, unused_imports))]
+#![cfg_attr(debug_assertions, allow(dead_code, unused_imports, unused_variables))]
 
 use actix_redis::RedisActor;
 use actix_web::{guard, web, web::Data, App, HttpResponse, HttpServer, Result};
@@ -7,56 +7,10 @@ use async_graphql::{
     EmptyMutation, EmptySubscription, MergedObject, Object, OutputType, Schema,
 };
 mod apps;
-// use crate::apps::base::QueryRoot;
+use crate::apps::base::{MutationRoot, QueryRoot};
 use async_graphql_actix_web::{GraphQLRequest, GraphQLResponse};
 
-// #[derive(MergedObject, Default)]
-// struct Query(UserQuery, MovieQuery);
-
-use crate::apps::user::models::User;
-
-#[derive(Default)]
-struct UserQuery;
-
-#[Object]
-impl UserQuery {
-    async fn users(&self) -> Vec<User>
-    where
-        User: OutputType + Clone,
-    {
-        vec![User {
-            id: 1,
-            fullname: "John Doe".to_string(),
-            username: "johndoe".to_string(),
-            password: "123456".to_string(),
-            is_active: true,
-        }]
-    }
-}
-
-#[derive(Default)]
-struct MovieQuery;
-
-#[Object]
-impl MovieQuery {
-    async fn movies(&self) -> Vec<User>
-    where
-        User: OutputType + Clone,
-    {
-        vec![User {
-            id: 1,
-            fullname: "John Doe".to_string(),
-            username: "johndoe".to_string(),
-            password: "123456".to_string(),
-            is_active: true,
-        }]
-    }
-}
-
-#[derive(MergedObject, Default)]
-struct Query(UserQuery, MovieQuery);
-
-type ShopSchema = Schema<Query, EmptyMutation, EmptySubscription>;
+type ShopSchema = Schema<QueryRoot, MutationRoot, EmptySubscription>;
 
 async fn index(schema: web::Data<ShopSchema>, req: GraphQLRequest) -> GraphQLResponse {
     schema.execute(req.into_inner()).await.into()
@@ -72,9 +26,13 @@ async fn index_playground() -> Result<HttpResponse> {
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     let addr = RedisActor::start("localhost:6379");
-    let schema = Schema::build(Query::default(), EmptyMutation, EmptySubscription)
-        .data(addr.clone())
-        .finish();
+    let schema = Schema::build(
+        QueryRoot::default(),
+        MutationRoot::default(),
+        EmptySubscription,
+    )
+    .data(addr.clone())
+    .finish();
 
     // .data(addr.clone())
 

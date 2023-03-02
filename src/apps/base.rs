@@ -4,6 +4,7 @@ use async_graphql::{
 };
 
 use crate::apps::shop::resolvers::ShopResolvers;
+use crate::apps::user::mutations::UserMutations;
 use crate::apps::user::resolvers::UserResolvers;
 
 pub async fn query_characters<'a, T>(
@@ -63,5 +64,8 @@ where
     .await
 }
 
-// #[derive(MergedObject, Default)]
-// pub struct QueryRoot(UserResolvers);
+#[derive(MergedObject, Default)]
+pub struct QueryRoot(UserResolvers, ShopResolvers);
+
+#[derive(MergedObject, Default)]
+pub struct MutationRoot(UserMutations);
