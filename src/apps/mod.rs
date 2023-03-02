@@ -1,5 +1,5 @@
-pub mod base;
 pub mod attribute;
+pub mod base;
 pub mod checkout;
 pub mod discount;
 pub mod invoice;
@@ -9,5 +9,5 @@ pub mod product;
 pub mod shipping;
 pub mod shop;
 pub mod user;
-pub mod warehouse;
 pub mod utils;
+pub mod warehouse;

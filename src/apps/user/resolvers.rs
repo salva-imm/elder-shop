@@ -1,20 +1,27 @@
-use std::borrow::Cow;
-use async_graphql::{connection::{query, Connection, Edge}, Context, ContextSelectionSet, Enum, Error, Interface, Object, OutputType, Positioned, Result, ServerResult, SimpleObject};
-use async_graphql::parser::types::Field;
-use async_graphql::registry::Registry;
 use crate::apps::base::query_characters;
 use crate::apps::user::models::User;
+use async_graphql::parser::types::Field;
+use async_graphql::registry::Registry;
+use async_graphql::{
+    connection::{query, Connection, Edge},
+    Context, ContextSelectionSet, Enum, Error, Interface, Object, OutputType, Positioned, Result,
+    ServerResult,
+};
+use std::borrow::Cow;
 
+#[derive(Default)]
+pub struct UserResolvers;
 
 #[Object]
-impl User {
-    async fn users(&self,
-                   ctx: &Context<'_>,
-                   after: Option<String>,
-                    before: Option<String>,
-                    first: Option<i32>,
-                    last: Option<i32>
-                   ) -> Result<Connection<usize, User>> {
+impl UserResolvers {
+    async fn users(
+        &self,
+        ctx: &Context<'_>,
+        after: Option<String>,
+        before: Option<String>,
+        first: Option<i32>,
+        last: Option<i32>,
+    ) -> Result<Connection<usize, User>> {
         let data = vec![
             User {
                 id: 1,
@@ -48,5 +55,3 @@ impl User {
         query_characters(after, before, first, last, data).await
     }
 }
-
-
